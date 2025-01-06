@@ -1,1 +1,3 @@
-/home/stefan/my-neversea-2025/target/debug/my-neversea-2025-meta: /home/stefan/my-neversea-2025/meta/src/main.rs /home/stefan/my-neversea-2025/src/lib.rs
+version https://git-lfs.github.com/spec/v1
+oid sha256:78ebd35b5df4f2311847f8a62a27cdf834a05c90e12b1d900f88b60b0580f077
+size 154

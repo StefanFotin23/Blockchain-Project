@@ -1,1 +1,3 @@
-/home/stefan/my-neversea-2025/target/debug/rust-interact: /home/stefan/my-neversea-2025/interactor/src/config.rs /home/stefan/my-neversea-2025/interactor/src/interactor_main.rs /home/stefan/my-neversea-2025/interactor/src/proxy.rs /home/stefan/my-neversea-2025/src/lib.rs
+version https://git-lfs.github.com/spec/v1
+oid sha256:79266d71d832702ef782db7c70bea00b990d4f6c002e6fa9f7cbf26aff066eec
+size 272
