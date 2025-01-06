@@ -1,0 +1,25 @@
+[package]
+name = "my-neversea-2025"
+version = "0.0.0"
+publish = false
+edition = "2021"
+authors = ["you"]
+
+[lib]
+path = "src/lib.rs"
+
+[dependencies.multiversx-sc]
+version = "0.54.0"
+
+[dev-dependencies]
+num-bigint = "0.4"
+
+[dev-dependencies.multiversx-sc-scenario]
+version = "0.54.0"
+
+[workspace]
+members = [
+    ".",
+    "meta",
+    "interactor",
+]
