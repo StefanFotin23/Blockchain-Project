@@ -1,11 +1,11 @@
 {
     "buildInfo": {
         "rustc": {
-            "version": "1.81.0",
-            "commitHash": "eeb90cda1969383f56a2637cbd3037bdf598841c",
-            "commitDate": "2024-09-04",
+            "version": "1.84.0",
+            "commitHash": "9fc6b43126469e3858e2fe86cafb4f0fd5068869",
+            "commitDate": "2025-01-07",
             "channel": "Stable",
-            "short": "rustc 1.81.0 (eeb90cda1 2024-09-04)"
+            "short": "rustc 1.84.0 (9fc6b4312 2025-01-07)"
         },
         "contractCrate": {
             "name": "my-neversea-2025",

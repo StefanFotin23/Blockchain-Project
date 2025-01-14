@@ -1,0 +1,10 @@
+{
+  "bytecode": "output/optimized.wasm",
+  "arguments": [],
+  "gas-limit": 20000000,
+  "chain": "D",
+  "proxy": "https://devnet-gateway.multiversx.com",
+  "wallet": "new_wallet.pem",
+  "recall-nonce": true
+}
+

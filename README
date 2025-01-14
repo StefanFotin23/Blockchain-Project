@@ -1,0 +1,23 @@
+# ROOT
+
+cargo build
+
+cargo check
+
+cargo run
+
+# INTERACTOR
+
+cd interactor
+cargo build
+
+
+# META
+
+cd meta
+cargo build
+
+# Assuming you've set up a local node
+# Deploy contract
+multiversx-cli contract deploy --file output/my-neversea-2025.wasm --contract-name MyNeversea2025
+
