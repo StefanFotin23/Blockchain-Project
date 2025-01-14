@@ -106,27 +106,26 @@ pub trait Project {
             "Registration fee is incorrect; please pay either the normal or VIP fee."
         );
 
+        let mut attributes = ManagedBuffer::new();
+        let mut should_mint = false;
+        let mut nonce: u64 = 0;
+
         // Determine the participant type and process the payment
         if payment_amount.eq(&normal_fee) {
             // Send the payment to the contract owner
             let owner = self.blockchain().get_owner_address();
             self.send().direct_egld(&owner, &payment_amount);
             self.participants().insert(caller.clone());
+            attributes = ManagedBuffer::from("Normal Ticket");
+            should_mint = true;
         } else if payment_amount.eq(&vip_fee) {
             // Send the payment to the contract owner
             let owner = self.blockchain().get_owner_address();
             self.send().direct_egld(&owner, &payment_amount);
             self.vip_participants().insert(caller.clone());
+            attributes = ManagedBuffer::from("VIP Ticket");
+            should_mint = true;
         }
-
-        // Mint NFT for the participant
-        let token_name = ManagedBuffer::from("Event Ticket");
-        let description = if payment_amount == normal_fee {
-            ManagedBuffer::from("Normal Ticket")
-        } else {
-            ManagedBuffer::from("VIP Ticket")
-        };
-        let uri = ManagedBuffer::from("https://th.bing.com/th/id/OIP.xL8YC9fXHMksjUmBIAGrIwHaGz?rs=1&pid=ImgDetMain");
 
         // // Ensure the NFT token ID is set before minting
         require!(
@@ -134,10 +133,11 @@ pub trait Project {
             "NFT token ID is not set. Please set it first."
         );
 
-        let token_id = TokenIdentifier::from_esdt_bytes(self.nft_token_id().get());
-        let amount = BigUint::from(1u32);
-        let attributes = ManagedBuffer::new();
-        let nonce = self.send().esdt_nft_create_compact( &token_id, &amount, &(&attributes, ),);
+        if should_mint {
+            let token_id = TokenIdentifier::from_esdt_bytes(self.nft_token_id().get());
+            let amount = BigUint::from(1u32);
+            nonce = self.send().esdt_nft_create_compact( &token_id, &amount, &(&attributes, ),);
+        }
 
         nonce
     }
