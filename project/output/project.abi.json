@@ -163,6 +163,41 @@
                     "type": "u64"
                 }
             ]
+        },
+        {
+            "name": "sellNft",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "nft_id",
+                    "type": "TokenIdentifier"
+                },
+                {
+                    "name": "nft_nonce",
+                    "type": "u64"
+                },
+                {
+                    "name": "nft_amount",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "buyer",
+                    "type": "Address"
+                },
+                {
+                    "name": "payment_token",
+                    "type": "EgldOrEsdtTokenIdentifier"
+                },
+                {
+                    "name": "payment_nonce",
+                    "type": "u64"
+                },
+                {
+                    "name": "payment_amount",
+                    "type": "BigUint"
+                }
+            ],
+            "outputs": []
         }
     ],
     "esdtAttributes": [],

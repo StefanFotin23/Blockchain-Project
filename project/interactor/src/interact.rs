@@ -23,6 +23,19 @@ pub async fn project_cli() {
     match cmd.as_str() {
         "deploy" => interact.deploy().await,
         "upgrade" => interact.upgrade().await,
+        "getRegistrationFee" => interact.registration_fee().await,
+        "getRegistrationFeeVip" => interact.registration_fee_vip().await,
+        "getNormalTicketNumber" => interact.normal_ticket_number().await,
+        "getVipTicketNumber" => interact.vip_ticket_number().await,
+        "resaleTicketFee" => interact.resale_ticket_fee().await,
+        "getResaleNormalTicketNumber" => interact.resale_normal_ticket_number().await,
+        "getResaleVipTicketNumber" => interact.resale_vip_ticket_number().await,
+        "getParticipants" => interact.participants().await,
+        "getVipParticipants" => interact.vip_participants().await,
+        "see_normal_ticket_price" => interact.see_normal_ticket_price().await,
+        "see_vip_ticket_price" => interact.see_vip_ticket_price().await,
+        "see_vip_ticket_number" => interact.see_vip_ticket_number().await,
+        "register" => interact.register().await,
         _ => panic!("unknown command: {}", &cmd),
     }
 }
@@ -132,6 +145,199 @@ impl ContractInteract {
             .code(&self.contract_code)
             .code_metadata(CodeMetadata::UPGRADEABLE)
             .returns(ReturnsNewAddress)
+            .run()
+            .await;
+
+        println!("Result: {response:?}");
+    }
+
+    pub async fn registration_fee(&mut self) {
+        let result_value = self
+            .interactor
+            .query()
+            .to(self.state.current_address())
+            .typed(proxy::ProjectProxy)
+            .registration_fee()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {result_value:?}");
+    }
+
+    pub async fn registration_fee_vip(&mut self) {
+        let result_value = self
+            .interactor
+            .query()
+            .to(self.state.current_address())
+            .typed(proxy::ProjectProxy)
+            .registration_fee_vip()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {result_value:?}");
+    }
+
+    pub async fn normal_ticket_number(&mut self) {
+        let result_value = self
+            .interactor
+            .query()
+            .to(self.state.current_address())
+            .typed(proxy::ProjectProxy)
+            .normal_ticket_number()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {result_value:?}");
+    }
+
+    pub async fn vip_ticket_number(&mut self) {
+        let result_value = self
+            .interactor
+            .query()
+            .to(self.state.current_address())
+            .typed(proxy::ProjectProxy)
+            .vip_ticket_number()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {result_value:?}");
+    }
+
+    pub async fn resale_ticket_fee(&mut self) {
+        let result_value = self
+            .interactor
+            .query()
+            .to(self.state.current_address())
+            .typed(proxy::ProjectProxy)
+            .resale_ticket_fee()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {result_value:?}");
+    }
+
+    pub async fn resale_normal_ticket_number(&mut self) {
+        let result_value = self
+            .interactor
+            .query()
+            .to(self.state.current_address())
+            .typed(proxy::ProjectProxy)
+            .resale_normal_ticket_number()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {result_value:?}");
+    }
+
+    pub async fn resale_vip_ticket_number(&mut self) {
+        let result_value = self
+            .interactor
+            .query()
+            .to(self.state.current_address())
+            .typed(proxy::ProjectProxy)
+            .resale_vip_ticket_number()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {result_value:?}");
+    }
+
+    pub async fn participants(&mut self) {
+        let result_value = self
+            .interactor
+            .query()
+            .to(self.state.current_address())
+            .typed(proxy::ProjectProxy)
+            .participants()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {result_value:?}");
+    }
+
+    pub async fn vip_participants(&mut self) {
+        let result_value = self
+            .interactor
+            .query()
+            .to(self.state.current_address())
+            .typed(proxy::ProjectProxy)
+            .vip_participants()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {result_value:?}");
+    }
+
+    pub async fn see_normal_ticket_price(&mut self) {
+        let response = self
+            .interactor
+            .tx()
+            .from(&self.wallet_address)
+            .to(self.state.current_address())
+            .gas(30_000_000u64)
+            .typed(proxy::ProjectProxy)
+            .see_normal_ticket_price()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {response:?}");
+    }
+
+    pub async fn see_vip_ticket_price(&mut self) {
+        let response = self
+            .interactor
+            .tx()
+            .from(&self.wallet_address)
+            .to(self.state.current_address())
+            .gas(30_000_000u64)
+            .typed(proxy::ProjectProxy)
+            .see_vip_ticket_price()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {response:?}");
+    }
+
+    pub async fn see_vip_ticket_number(&mut self) {
+        let response = self
+            .interactor
+            .tx()
+            .from(&self.wallet_address)
+            .to(self.state.current_address())
+            .gas(30_000_000u64)
+            .typed(proxy::ProjectProxy)
+            .see_vip_ticket_number()
+            .returns(ReturnsResultUnmanaged)
+            .run()
+            .await;
+
+        println!("Result: {response:?}");
+    }
+
+    pub async fn register(&mut self) {
+        let egld_amount = BigUint::<StaticApi>::from(0u128);
+
+        let response = self
+            .interactor
+            .tx()
+            .from(&self.wallet_address)
+            .to(self.state.current_address())
+            .gas(30_000_000u64)
+            .typed(proxy::ProjectProxy)
+            .register()
+            .egld(egld_amount)
+            .returns(ReturnsResultUnmanaged)
             .run()
             .await;
 

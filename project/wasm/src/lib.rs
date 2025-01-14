@@ -6,9 +6,9 @@
 
 // Init:                                 1
 // Upgrade:                              1
-// Endpoints:                           13
+// Endpoints:                           14
 // Async Callback (empty):               1
-// Total number of exported functions:  16
+// Total number of exported functions:  17
 
 #![no_std]
 
@@ -33,6 +33,7 @@ multiversx_sc_wasm_adapter::endpoints! {
         see_vip_ticket_price => see_vip_ticket_price
         see_vip_ticket_number => see_vip_ticket_number
         register => register
+        sellNft => sell_nft_endpoint
     )
 }
 

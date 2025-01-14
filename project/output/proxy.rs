@@ -71,3 +71,129 @@ where
             .original_result()
     }
 }
+
+#[rustfmt::skip]
+impl<Env, From, To, Gas> ProjectProxyMethods<Env, From, To, Gas>
+where
+    Env: TxEnv,
+    Env::Api: VMApi,
+    From: TxFrom<Env>,
+    To: TxTo<Env>,
+    Gas: TxGas<Env>,
+{
+    pub fn registration_fee(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, BigUint<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getRegistrationFee")
+            .original_result()
+    }
+
+    pub fn registration_fee_vip(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, BigUint<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getRegistrationFeeVip")
+            .original_result()
+    }
+
+    pub fn normal_ticket_number(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, BigUint<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getNormalTicketNumber")
+            .original_result()
+    }
+
+    pub fn vip_ticket_number(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, BigUint<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getVipTicketNumber")
+            .original_result()
+    }
+
+    pub fn resale_ticket_fee(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, BigUint<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("resaleTicketFee")
+            .original_result()
+    }
+
+    pub fn resale_normal_ticket_number(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, BigUint<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getResaleNormalTicketNumber")
+            .original_result()
+    }
+
+    pub fn resale_vip_ticket_number(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, BigUint<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getResaleVipTicketNumber")
+            .original_result()
+    }
+
+    pub fn participants(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, MultiValueEncoded<Env::Api, ManagedAddress<Env::Api>>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getParticipants")
+            .original_result()
+    }
+
+    pub fn vip_participants(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, MultiValueEncoded<Env::Api, ManagedAddress<Env::Api>>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("getVipParticipants")
+            .original_result()
+    }
+
+    pub fn see_normal_ticket_price(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, BigUint<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("see_normal_ticket_price")
+            .original_result()
+    }
+
+    pub fn see_vip_ticket_price(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, BigUint<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("see_vip_ticket_price")
+            .original_result()
+    }
+
+    pub fn see_vip_ticket_number(
+        self,
+    ) -> TxTypedCall<Env, From, To, NotPayable, Gas, BigUint<Env::Api>> {
+        self.wrapped_tx
+            .payment(NotPayable)
+            .raw_call("see_vip_ticket_number")
+            .original_result()
+    }
+
+    pub fn register(
+        self,
+    ) -> TxTypedCall<Env, From, To, (), Gas, u64> {
+        self.wrapped_tx
+            .raw_call("register")
+            .original_result()
+    }
+}

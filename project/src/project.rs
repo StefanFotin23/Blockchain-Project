@@ -62,8 +62,6 @@ pub trait Project {
     #[storage_mapper("resale_vip_ticket_number")]
     fn resale_vip_ticket_number(&self) -> SingleValueMapper<BigUint>;
 
-    // Resale Ticket Price List
-
     // Participants
     #[view(getParticipants)]
     #[storage_mapper("participants")]
@@ -92,7 +90,7 @@ pub trait Project {
     // User Endpoints
     #[endpoint]
     #[payable("EGLD")]
-    fn register(&self) -> u64{
+    fn register(&self) -> u64 {
         let caller = self.blockchain().get_caller();
         let payment_amount = self.call_value().egld().clone_value();
 
@@ -116,6 +114,9 @@ pub trait Project {
             let owner = self.blockchain().get_owner_address();
             self.send().direct_egld(&owner, &payment_amount);
             self.participants().insert(caller.clone());
+            let mut nr = self.normal_ticket_number().get();
+            nr = nr - BigUint::from(1u32);
+            self.normal_ticket_number().set(nr);
             attributes = ManagedBuffer::from("Normal Ticket");
             should_mint = true;
         } else if payment_amount.eq(&vip_fee) {
@@ -123,6 +124,9 @@ pub trait Project {
             let owner = self.blockchain().get_owner_address();
             self.send().direct_egld(&owner, &payment_amount);
             self.vip_participants().insert(caller.clone());
+            let mut nr = self.vip_ticket_number().get();
+            nr = nr - BigUint::from(1u32);
+            self.vip_ticket_number().set(nr);
             attributes = ManagedBuffer::from("VIP Ticket");
             should_mint = true;
         }
@@ -140,6 +144,17 @@ pub trait Project {
         }
 
         nonce
+    }
+
+    #[endpoint(sellNft)]
+    fn sell_nft_endpoint( &self, nft_id: TokenIdentifier, nft_nonce: u64, nft_amount: BigUint, buyer: ManagedAddress, payment_token: EgldOrEsdtTokenIdentifier, payment_nonce: u64, payment_amount: BigUint ) {
+        // Send the SFTs/NFTs to the buyer 
+        self.send().sell_nft( &nft_id, nft_nonce, &nft_amount, &buyer, &payment_token, payment_nonce, &payment_amount, );
+        
+
+
+        let caller = self.blockchain().get_caller();
+        self.send().direct_egld(&caller, &payment_amount);
     }
 
     #[upgrade]
