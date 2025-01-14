@@ -158,7 +158,11 @@
                 "EGLD"
             ],
             "inputs": [],
-            "outputs": []
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
         }
     ],
     "esdtAttributes": [],

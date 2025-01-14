@@ -5,6 +5,8 @@
   "bigIntGetCallValue",
   "bigIntSetInt64",
   "checkNoPayment",
+  "cleanReturnData",
+  "getGasLeft",
   "getNumArguments",
   "mBufferAppend",
   "mBufferAppendBytes",
@@ -19,9 +21,12 @@
   "mBufferStorageStore",
   "mBufferToBigIntUnsigned",
   "managedCaller",
+  "managedExecuteOnDestContext",
   "managedGetMultiESDTCallValue",
   "managedOwnerAddress",
+  "managedSCAddress",
   "managedSignalError",
   "managedTransferValueExecute",
-  "signalError"
+  "signalError",
+  "smallIntFinishUnsigned"
 ]

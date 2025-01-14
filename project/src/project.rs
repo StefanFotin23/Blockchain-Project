@@ -92,7 +92,7 @@ pub trait Project {
     // User Endpoints
     #[endpoint]
     #[payable("EGLD")]
-    fn register(&self) {
+    fn register(&self) -> u64{
         let caller = self.blockchain().get_caller();
         let payment_amount = self.call_value().egld().clone_value();
 
@@ -108,14 +108,16 @@ pub trait Project {
 
         // Determine the participant type and process the payment
         if payment_amount.eq(&normal_fee) {
+            // Send the payment to the contract owner
+            let owner = self.blockchain().get_owner_address();
+            self.send().direct_egld(&owner, &payment_amount);
             self.participants().insert(caller.clone());
         } else if payment_amount.eq(&vip_fee) {
+            // Send the payment to the contract owner
+            let owner = self.blockchain().get_owner_address();
+            self.send().direct_egld(&owner, &payment_amount);
             self.vip_participants().insert(caller.clone());
         }
-
-        // Send the payment to the contract owner
-        let owner = self.blockchain().get_owner_address();
-        self.send().direct_egld(&owner, &payment_amount);
 
         // Mint NFT for the participant
         let token_name = ManagedBuffer::from("Event Ticket");
@@ -132,17 +134,12 @@ pub trait Project {
             "NFT token ID is not set. Please set it first."
         );
 
-        let token_id = TokenIdentifier::from_esdt_bytes(ManagedBuffer::from("event_ticket"));
+        let token_id = TokenIdentifier::from_esdt_bytes(self.nft_token_id().get());
         let amount = BigUint::from(1u32);
-        let name = ManagedBuffer::from("Event Ticket");
-        let royalties = BigUint::from(10u32);
-        let hash = ManagedBuffer::from("unique_hash_for_nft");
-        let attributes: ManagedVec<<Self as multiversx_sc::contract_base::ContractBase>::Api, Attributes> = ManagedVec::new();
-        let mut uris: ManagedVec<<Self as multiversx_sc::contract_base::ContractBase>::Api, ManagedBuffer> = ManagedVec::new();
-        uris.push(ManagedBuffer::from("https://your-uri.com"));
+        let attributes = ManagedBuffer::new();
+        let nonce = self.send().esdt_nft_create_compact( &token_id, &amount, &(&attributes, ),);
 
-        // Now call esdt_nft_create with the correct arguments
-        self.send().esdt_nft_create( &token_id, &amount, &name, &royalties, &hash, &attributes, &uris,);
+        nonce
     }
 
     #[upgrade]
