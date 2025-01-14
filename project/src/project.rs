@@ -132,13 +132,13 @@ pub trait Project {
             "NFT token ID is not set. Please set it first."
         );
 
-        let token_id = TokenIdentifier::from_managed_buffer(ManagedBuffer::from("event_ticket"));
+        let token_id = TokenIdentifier::from_esdt_bytes(ManagedBuffer::from("event_ticket"));
         let amount = BigUint::from(1u32);
         let name = ManagedBuffer::from("Event Ticket");
         let royalties = BigUint::from(10u32);
         let hash = ManagedBuffer::from("unique_hash_for_nft");
-        let attributes = ManagedVec::new();
-        let mut uris = ManagedVec::new();
+        let attributes: ManagedVec<<Self as multiversx_sc::contract_base::ContractBase>::Api, Attributes> = ManagedVec::new();
+        let mut uris: ManagedVec<<Self as multiversx_sc::contract_base::ContractBase>::Api, ManagedBuffer> = ManagedVec::new();
         uris.push(ManagedBuffer::from("https://your-uri.com"));
 
         // Now call esdt_nft_create with the correct arguments
