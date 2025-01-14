@@ -191,10 +191,6 @@
                 {
                     "name": "payment_nonce",
                     "type": "u64"
-                },
-                {
-                    "name": "payment_amount",
-                    "type": "BigUint"
                 }
             ],
             "outputs": []

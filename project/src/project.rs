@@ -147,7 +147,13 @@ pub trait Project {
     }
 
     #[endpoint(sellNft)]
-    fn sell_nft_endpoint( &self, nft_id: TokenIdentifier, nft_nonce: u64, nft_amount: BigUint, buyer: ManagedAddress, payment_token: EgldOrEsdtTokenIdentifier, payment_nonce: u64, payment_amount: BigUint ) {
+    fn sell_nft_endpoint( &self, nft_id: TokenIdentifier, nft_nonce: u64, nft_amount: BigUint, buyer: ManagedAddress, payment_token: EgldOrEsdtTokenIdentifier, payment_nonce: u64 ) {
+        let mut payment_amount = self.registration_fee_vip().get();
+
+        let fee = self.resale_ticket_fee().get();
+
+        payment_amount = payment_amount - fee;
+        
         // Send the SFTs/NFTs to the buyer 
         self.send().sell_nft( &nft_id, nft_nonce, &nft_amount, &buyer, &payment_token, payment_nonce, &payment_amount, );
         
