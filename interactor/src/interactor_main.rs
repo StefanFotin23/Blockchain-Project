@@ -86,11 +86,10 @@ struct ContractInteract {
 impl ContractInteract {
     async fn new() -> Self {
         let config = Config::new();
-        let mut interactor = Interactor::new(config.gateway_uri()).await;
+        let mut interactor = Interactor::new(config.gateway_uri(), config.use_chain_simulator()).await;
         interactor.set_current_dir_from_workspace("my-neversea-2025");
 
-        let wallet = Wallet::from_pem_file("/home/stefan/new_wallet.pem").unwrap();
-        let wallet_address = interactor.register_wallet(wallet).await;
+        let wallet_address = interactor.register_wallet(test_wallets::alice()).await;
         
         let contract_code = BytesValue::interpret_from(
             "mxsc:../output/my-neversea-2025.mxsc.json",
