@@ -2,7 +2,6 @@
 
 #[allow(unused_imports)]
 use multiversx_sc::imports::*;
-use multiversx_sc::derive_imports::*;
 
 /// An empty contract. To be used as a template when starting a new contract from scratch.
 #[multiversx_sc::contract]
@@ -10,6 +9,8 @@ pub trait Project {
     #[init]
     fn init(&self) {
         // Initial values
+        let token_id = ManagedBuffer::from("EVENT-TICKET");
+        self.nft_token_id().set(token_id);
         let registration_fee: BigUint = BigUint::from(100u32);
         let vip_registration_fee: BigUint = BigUint::from(300u32);
         let normal_ticket_number: BigUint = BigUint::from(20u32);
@@ -24,6 +25,10 @@ pub trait Project {
         self.resale_normal_ticket_number().set(BigUint::from(0u32));
         self.resale_vip_ticket_number().set(BigUint::from(0u32));
     }
+
+    // NFT Collection Token Id
+    #[storage_mapper("nft_token_id")]
+    fn nft_token_id(&self) -> SingleValueMapper<ManagedBuffer>;
 
     // Registration Fees
     #[view(getRegistrationFee)]
@@ -101,71 +106,44 @@ pub trait Project {
             "Registration fee is incorrect; please pay either the normal or VIP fee."
         );
 
+        // Determine the participant type and process the payment
         if payment_amount.eq(&normal_fee) {
-            self.participants().insert(caller);
-            let owner = self.blockchain().get_owner_address();
-            self.send().direct_egld(&owner, &payment_amount);
+            self.participants().insert(caller.clone());
         } else if payment_amount.eq(&vip_fee) {
-            self.vip_participants().insert(caller);
-            let owner = self.blockchain().get_owner_address();
-            self.send().direct_egld(&owner, &payment_amount);
+            self.vip_participants().insert(caller.clone());
         }
+
+        // Send the payment to the contract owner
+        let owner = self.blockchain().get_owner_address();
+        self.send().direct_egld(&owner, &payment_amount);
+
+        // Mint NFT for the participant
+        let token_name = ManagedBuffer::from("Event Ticket");
+        let description = if payment_amount == normal_fee {
+            ManagedBuffer::from("Normal Ticket")
+        } else {
+            ManagedBuffer::from("VIP Ticket")
+        };
+        let uri = ManagedBuffer::from("https://th.bing.com/th/id/OIP.xL8YC9fXHMksjUmBIAGrIwHaGz?rs=1&pid=ImgDetMain");
+
+        // // Ensure the NFT token ID is set before minting
+        require!(
+            !self.nft_token_id().is_empty(),
+            "NFT token ID is not set. Please set it first."
+        );
+
+        let token_id = TokenIdentifier::from_managed_buffer(ManagedBuffer::from("event_ticket"));
+        let amount = BigUint::from(1u32);
+        let name = ManagedBuffer::from("Event Ticket");
+        let royalties = BigUint::from(10u32);
+        let hash = ManagedBuffer::from("unique_hash_for_nft");
+        let attributes = ManagedVec::new();
+        let mut uris = ManagedVec::new();
+        uris.push(ManagedBuffer::from("https://your-uri.com"));
+
+        // Now call esdt_nft_create with the correct arguments
+        self.send().esdt_nft_create( &token_id, &amount, &name, &royalties, &hash, &attributes, &uris,);
     }
-
-    // // User Endpoints
-    // #[endpoint]
-    // #[payable("EGLD")]
-    // fn register(&self) {
-    //     let caller = self.blockchain().get_caller();
-    //     let payment_amount = self.call_value().egld_value().clone_value();
-
-    //     // Define VIP and normal registration fees
-    //     let normal_fee = self.registration_fee().get();
-    //     let vip_fee = self.registration_fee_vip().get();
-
-    //     // Check if the payment amount is either the normal fee or VIP fee
-    //     require!(
-    //         payment_amount == normal_fee || payment_amount == vip_fee,
-    //         "Registration fee is incorrect; please pay either the normal or VIP fee."
-    //     );
-
-    //     // Determine the participant type and process the payment
-    //     if payment_amount.eq(&normal_fee) {
-    //         self.participants().insert(caller.clone());
-    //     } else if payment_amount.eq(&vip_fee) {
-    //         self.vip_participants().insert(caller.clone());
-    //     }
-
-    //     // Send the payment to the contract owner
-    //     let owner = self.blockchain().get_owner_address();
-    //     self.send().direct_egld(&owner, &payment_amount);
-
-    //     // Mint NFT for the participant
-    //     let token_name = ManagedBuffer::from("Event Ticket");
-    //     let description = if payment_amount == normal_fee {
-    //         ManagedBuffer::from("Normal Ticket")
-    //     } else {
-    //         ManagedBuffer::from("VIP Ticket")
-    //     };
-    //     let uri = ManagedBuffer::from("https://th.bing.com/th/id/OIP.xL8YC9fXHMksjUmBIAGrIwHaGz?rs=1&pid=ImgDetMain");
-
-    //     // Ensure the NFT token ID is set before minting
-    //     require!(
-    //         !self.nft_token_id().is_empty(),
-    //         "NFT token ID is not set. Please set it first."
-    //     );
-
-    //     // Mint the NFT and assign it to the caller
-    //     self.send().esdt_nft_create(
-    //         &caller,
-    //         &self.nft_token_id().get(),
-    //         &BigUint::from(1u32), // Quantity (Non-fungible)
-    //         token_name,
-    //         description,
-    //         uri,
-    //         &[], // Attributes (optional)
-    //     );
-    // }
 
     #[upgrade]
     fn upgrade(&self) {}
